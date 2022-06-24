@@ -7,7 +7,7 @@ from pygame.color import Color
 
 SCREEN_WIDTH: int = 1281
 SCREEN_HEIGHT: int = 769
-WHITE: Color = Color(255, 255, 255)
+WHITE: Color = Color(255, 255, 24)
 FPS: int = 30  # Số cảnh mỗi giây (frame per second)
 
 pygame.init()
