@@ -36,7 +36,7 @@ BACKGROUND_SPRITE = pygame.transform.scale(BACKGROUND_SPRITE, [SCREEN_WIDTH, SCR
 
 # Game Entities Sprites
 PLAYER_SPRITE: Surface = scale_image(pygame.image.load("assets/player.png"), 0.2)
-ROBOT_SPRITE: Surface = scale_image(pygame.image.load("assets/robot.png"), 0.08)
+ROBOT_SPRITE: Surface = scale_image(pygame.image.load("assets/robot.png"), 0.09)
 DIAMOND_BLUE_SPRITE: Surface = scale_image(pygame.image.load("assets/diamond_blue.png"), 0.02)
 DIAMOND_RED_SPRITE: Surface = scale_image(pygame.image.load("assets/diamond_red.png"), 0.02)
 TO_MO_SPRITE: Surface = scale_image(pygame.image.load("assets/to_mo.png"), 0.2)
