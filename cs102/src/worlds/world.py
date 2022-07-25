@@ -13,7 +13,6 @@ from worlds.base_world import BaseWorld
 
 class World(BaseWorld):
     """The in-game world.
-
     This class manages all game entities in self.player and self.entities.
     """
 
