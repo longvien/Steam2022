@@ -51,4 +51,3 @@ class BaseEntity:
         """Subclass should implement more of this method."""
         self.events = events
         self.world = world
-        self.sprite.update()

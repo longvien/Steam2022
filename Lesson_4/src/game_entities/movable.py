@@ -50,9 +50,6 @@ class MovableEntity(BaseEntity):
 
         # Step 1: calculate would-be dx, dy when unobstructed
         self.dx = 0
-
-        if self.is_landed:
-            self.dy = 0
         self.dy += GameConfig.GRAVITY
 
         if self.moving_left:
@@ -60,14 +57,19 @@ class MovableEntity(BaseEntity):
         if self.moving_right:
             self.dx = self.speed
 
-        # Step 2: update dx, dy to prevent player from overlapping with obstacles
-        self._update_dx_dy_based_on_obstacles(world.get_obstacles())
-
-        # Step 3: update current position by the deltas
+        # Step 2: update current position by the deltas
         self.rect.x += self.dx
         self.rect.y += self.dy
 
-        # Depends on the subject current movement status, tweak the sprite rendering.
+        self.is_landed = False
+
+        # Step 3: Use a hardcoded ground (before next lesson)
+        if self.rect.bottom >= GameConfig.GROUND_LEVEL:
+            self.rect.bottom = GameConfig.GROUND_LEVEL
+            self.is_landed = True
+            self.dy = 0
+
+        # Depends on the subject current action, tweak the sprite rendering.
         self._update_sprite_state()
 
     def _update_sprite_state(self):
@@ -80,11 +82,11 @@ class MovableEntity(BaseEntity):
         else:
             self.sprite.set_action(ActionType.JUMP)
 
-        # If subject is moving left, turn on flip_x
+        # If detected subject is moving left, turn on flip_x
         if self.dx > 0:
-            self.sprite.set_flip_x(False)
+            self.sprite.flip_x = False
         elif self.dx < 0:
-            self.sprite.set_flip_x(True)
+            self.sprite.flip_x = True
 
     def move_left(self, enabled=True):
         self.moving_left = enabled
@@ -96,38 +98,3 @@ class MovableEntity(BaseEntity):
         if self.is_landed:
             self.is_landed = False
             self.dy = -self.jump_vertical_speed
-
-    def _update_dx_dy_based_on_obstacles(self, obstacles):
-        """
-        Knowing the positions of all obstacles and the would-be position of this subject
-        (self.rect.x + self.dx, self.rect.y + self.dy), check if the would-be position
-        is colliding with any of the obstacles.
-
-        If collision happens, restrict the movement by modifying self.dx and(or) self.dy.
-        """
-        # The obstacle check in the following for loop will determine
-        # whether the subject is_landed, so we first reset it.
-        self.is_landed = False
-        for obstacle in obstacles:
-            if obstacle.rect.colliderect(
-                self.rect.x + self.dx,
-                self.rect.y,
-                self.rect.width,
-                self.rect.height,
-            ):
-                # Hitting an obstacle horizontally, prevent horizontal movement altogether:
-                self.dx = 0
-            if obstacle.rect.colliderect(
-                self.rect.x,
-                self.rect.y + self.dy,
-                self.rect.width,
-                self.rect.height,
-            ):
-                # Hitting an obstacle vertically, reduce vertical movement:
-                if self.dy < 0:
-                    # the gap between player's head and obstacle above
-                    self.dy = obstacle.rect.bottom - self.rect.top
-                else:
-                    self.is_landed = True
-                    # the gap between player's feet and ground
-                    self.dy = obstacle.rect.top - self.rect.bottom

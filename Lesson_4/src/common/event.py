@@ -70,9 +70,6 @@ class GameEvent:
         """We deal with either"""
         return e.value if isinstance(e, EventType) else e
 
-    def __repr__(self):
-        return f"<{EventType(self.__get_event_type(self.event.type))}>:{self.event.__repr__()}"
-
     def post(self):
         pygame.event.post(self.event)
 
