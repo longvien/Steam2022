@@ -4,18 +4,18 @@ from typing import TYPE_CHECKING, Optional, Sequence
 
 from common import util
 from common.event import EventType, GameEvent
-from common.types import EntityType
+from common.types import EntityType, QuestName
 from config import GameConfig, NpcConfig
-from game_entities.base import BaseEntity
+from entities.animated_entity import AnimatedEntity
+from entities.dialogue_box import DialogueBox
 
 if TYPE_CHECKING:
     from worlds.world import World
 
-
 logger = util.get_logger(__name__)
 
 
-class FriendlyNpc(BaseEntity):
+class FriendlyNpc(AnimatedEntity):
     """
     Non-playable character, will talk and interact with Player.
     """
@@ -35,6 +35,14 @@ class FriendlyNpc(BaseEntity):
         self.dialogue_index: int = 0
         self.line_index: int = -1
 
+        self.should_loop_last_dialogue = False
+
+    def _update_action(self):
+        """
+        This entity does not have actions such as jump,
+        so we override this method with an empty body.
+        """
+
     def update(self, events: Sequence[GameEvent], world: World) -> None:
         super().update(events, world)
         self._handle_events()
@@ -44,7 +52,14 @@ class FriendlyNpc(BaseEntity):
             self._unhightlight()
 
     def has_dialogue(self) -> bool:
-        return self.dialogues and self.dialogues[-1] and self.dialogue_index < len(self.dialogues)
+        if not self.should_loop_last_dialogue:
+            return (
+                self.dialogues and self.dialogues[-1] and self.dialogue_index < len(self.dialogues)
+            )
+        else:
+            if self.dialogue_index >= len(self.dialogues):
+                self.dialogue_index = len(self.dialogues) - 1
+            return True
 
     def _handle_events(self):
         self.is_near_player = False
@@ -56,6 +71,12 @@ class FriendlyNpc(BaseEntity):
                 self.is_near_player = True
             elif event.is_type(EventType.PLAYER_ACTIVATE_NPC):
                 self._activate()
+            elif event.is_type(EventType.QUEST_END):
+                logger.info(f"Ending Quest: {event.event.quest_name}")
+
+                # Stop talking to Player
+                self.should_loop_last_dialogue = False
+                self.dialogues = []
 
     def _highlight(self):
         if not self.question_mark_id:
@@ -73,21 +94,33 @@ class FriendlyNpc(BaseEntity):
         """
         Manipulates the dialogue box entity.
         """
-        logger.info("NPC Activated")
-        next_line = self._get_next_line()
-        if not next_line:
+        next_dialogue_item = self._get_next_dialogue_item()
+        if not next_dialogue_item:
             GameEvent(EventType.NPC_DIALOGUE_END, sender_id=self.id).post()
             if self.dialogue_box_id:
                 self.world.remove_entity(self.dialogue_box_id)
                 self.dialogue_box_id = None
             return
 
+        next_line = "\n".join((next_dialogue_item["Subject"], next_dialogue_item["Line"]))
         if not self.dialogue_box_id:
             self.dialogue_box_id = self.world.add_entity(EntityType.DIALOGUE_BOX)
-        dialogue_box = self.world.get_entity(self.dialogue_box_id)
-        dialogue_box.sprite.set_text(next_line)
+        dialogue_box: DialogueBox = self.world.get_entity(self.dialogue_box_id)
+        dialogue_box.set_text(next_line)
 
-    def _get_next_line(self) -> Optional[str]:
+        str_quest_name = next_dialogue_item.get("QuestToStart")
+        if str_quest_name:
+            quest_name = QuestName[str_quest_name]
+            logger.info(f"Starting Quest: {quest_name}")
+            self.should_loop_last_dialogue = True
+            GameEvent(EventType.QUEST_START, sender_id=self.id, quest_name=quest_name).post()
+            # The result of the above line would look like this:
+            # EventQueue: posted <EventType.QUEST_START>:<Event(32855-UserEvent {
+            #     'sender_id': 30,
+            #     'quest_name': <QuestName.TRAMPOLINE: 1>
+            # })>
+
+    def _get_next_dialogue_item(self) -> Optional[str]:
         """
         Returns the next line in the current dialogue or None.
         """
@@ -100,5 +133,4 @@ class FriendlyNpc(BaseEntity):
             return None
         if not self.has_dialogue():
             return None
-        line = self.dialogues[self.dialogue_index][self.line_index]
-        return "\n".join((line["Subject"], line["Line"]))
+        return self.dialogues[self.dialogue_index][self.line_index]

@@ -1,15 +1,25 @@
-from typing import Dict, List, Sequence
+from typing import Callable, Dict, Iterable, List, Optional, Sequence, Union
 
 import pygame
 from pygame.surface import Surface
 
+import level_logics
 from common import util
 from common.event import GameEvent
-from common.types import COLLECTABLE_TYPES, FRIENDLY_NPC_TYPES, OBSTACLES_TYPES, EntityType
-from config import GameConfig, WorldData
-from game_entities.base import BaseEntity
-from game_entities.entity_factory import EntityFactory
+from common.types import (
+    COLLECTABLE_TYPES,
+    FIXED_POSITION_TYPES,
+    FRIENDLY_NPC_TYPES,
+    OBSTACLES_TYPES,
+    EntityType,
+)
+from common.util import get_logger
+from config import GameConfig, LevelLoadingBarConfig, WorldData
+from entities.base_entity import BaseEntity
+from entities.entity_factory import EntityFactory
 from worlds.base_world import BaseWorld
+
+logger = get_logger(__name__)
 
 
 class World(BaseWorld):
@@ -18,18 +28,21 @@ class World(BaseWorld):
     This class manages all game entities in self.player and self.entities.
     """
 
-    def __init__(self, screen: Surface) -> None:
+    def __init__(self, screen: Surface, level_id: int) -> None:
         super().__init__(screen)
         self.entities: Dict[int, BaseEntity] = {}
         self.abs_screen_offset = 0
         self.delta_screen_offset = 0
+        self.background: Optional[Surface] = None
+        self.event_handler: Optional[Callable] = None
+        self.events: Optional[Sequence[GameEvent]] = None
 
-        self.load_data(level_id=1)
+        # Will render the loading screen in ~1 second before the actual start of the level.
+        self.is_loading = True
+        self.loading_percent = 0
 
-        self.background = pygame.transform.scale(
-            pygame.image.load(GameConfig.BG_OFFICE_PATH),
-            (GameConfig.WIDTH, GameConfig.HEIGHT),
-        )
+        self.load_level(level_id)
+        logger.info(f"Loaded level {level_id} and spawned {len(self.entities)} entities")
 
         # TODO: load player position from level data
         self.player = EntityFactory.create(
@@ -42,6 +55,13 @@ class World(BaseWorld):
         if pygame.event.peek(pygame.QUIT):
             return False
 
+        if self.is_loading:
+            self.loading_percent += LevelLoadingBarConfig.STEP
+            util.draw_loading_bar(self.screen, self.loading_percent)
+            if self.loading_percent >= 100:
+                self.is_loading = False
+            return True
+
         self.screen.blit(self.background, (0, 0))
 
         self.update(events)
@@ -51,6 +71,11 @@ class World(BaseWorld):
         return True
 
     def update(self, events):
+        self.events = events
+
+        if self.event_handler:
+            self.event_handler(self)
+
         self.player.update(events, self)
 
         # CAVEAT:
@@ -70,11 +95,12 @@ class World(BaseWorld):
 
         for now just naively render entities as the order stored in `self.entities`.
         """
-        self.player.sprite.render(screen)
+        self.player.render(screen)
 
         for entity in self.entities.values():
-            entity.rect.x += self.delta_screen_offset
-            entity.sprite.render(screen)
+            if entity.entity_type not in FIXED_POSITION_TYPES:
+                entity.rect.x += self.delta_screen_offset
+            entity.render(screen)
 
         if GameConfig.DEBUG:
             # Numbering the tiles at the bottom of the screen, corresponding to the column numbers
@@ -96,13 +122,32 @@ class World(BaseWorld):
     def get_entity(self, entity_id: int) -> BaseEntity:
         return self.entities[entity_id]
 
+    def get_entity_id_by_type(self, entity_type: EntityType) -> Optional[int]:
+        """
+        Returns the ID of the first active entity of given type.
+        """
+        if not self.entities:
+            return None
+        for entity_id, entity in self.entities.items():
+            if not entity.is_active():
+                continue
+            if entity.entity_type == entity_type:
+                return entity_id
+        return None
+
     def remove_entity(self, entity_id: int):
         del self.entities[entity_id]
 
-    def load_data(self, level_id):
-        data = WorldData(level_id=level_id).data
+    def load_level(self, level_id):
+        data = WorldData(level_id=level_id)
+        self.background = util.scale_image(
+            # call .convert() to improve performance, learn more:
+            # https://www.codeproject.com/Articles/5298051/Improving-Performance-in-Pygame-Speed-Up-Your-Game
+            pygame.image.load(data.bg_path).convert(),
+            (GameConfig.WIDTH, GameConfig.HEIGHT),
+        )
 
-        for i, row in enumerate(data):
+        for i, row in enumerate(data.data):
             for j, entity_type in enumerate(row):
                 if entity_type == EntityType.EMPTY:
                     continue
@@ -114,6 +159,8 @@ class World(BaseWorld):
                     y=y,
                 )
 
+        self.event_handler = level_logics.get_event_handler(level_id=level_id)
+
     def update_screen_offset(self, delta):
         # do not let abs_screen_offset becomes > 0, to prevent overscroll to the left
         new_abs_screen_offset = min(0, self.abs_screen_offset + delta)
@@ -123,18 +170,40 @@ class World(BaseWorld):
     def at_left_most(self):
         return self.abs_screen_offset >= 0
 
-    # BELOW are helper functions to select only related entities for each chunk of game logics.
+    # BELOW are helper functions to select only related entities for specific game logics.
+    # Most game logics involve interactions between Player and some entities, so these helper
+    # functions are likely being called in Player code.
     def get_obstacles(self) -> List[BaseEntity]:
         return [
-            entity for entity in self.entities.values() if entity.entity_type in OBSTACLES_TYPES
+            entity
+            for entity in self.entities.values()
+            if entity.is_active() and entity.entity_type in OBSTACLES_TYPES
         ]
 
     def get_collectable_tiles(self) -> List[BaseEntity]:
         return [
-            entity for entity in self.entities.values() if entity.entity_type in COLLECTABLE_TYPES
+            entity
+            for entity in self.entities.values()
+            if entity.is_active() and entity.entity_type in COLLECTABLE_TYPES
         ]
 
     def get_friendly_npcs(self) -> List[BaseEntity]:
         return [
-            entity for entity in self.entities.values() if entity.entity_type in FRIENDLY_NPC_TYPES
+            entity
+            for entity in self.entities.values()
+            if entity.is_active() and entity.entity_type in FRIENDLY_NPC_TYPES
         ]
+
+    def get_trampolines(self) -> List[BaseEntity]:
+        return [
+            entity
+            for entity in self.entities.values()
+            if entity.entity_type == EntityType.TRAMPOLINE
+        ]
+
+    def get_entities(
+        self, entity_types: Union[EntityType, Iterable[EntityType]]
+    ) -> List[BaseEntity]:
+        if isinstance(entity_types, EntityType):
+            entity_types = [entity_types]
+        return [entity for entity in self.entities.values() if entity.entity_type in entity_types]

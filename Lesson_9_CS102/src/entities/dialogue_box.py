@@ -1,11 +1,11 @@
 from common import util
 from config import Color, DialogueBoxConfig
-from gui.base_sprite import BaseSprite
+from entities.base_entity import BaseEntity
 
 
-class DialogueBoxSprite(BaseSprite):
+class DialogueBox(BaseEntity):
     """
-    Render the dialogue box and text within it.
+    Dialogue box appears at fixed position at bottom of the screen.
     """
 
     def set_text(self, text):

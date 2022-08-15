@@ -1,47 +1,55 @@
 from __future__ import annotations
 
-import logging
+import random
 from typing import TYPE_CHECKING, Sequence
 
+from common import util
 from common.event import GameEvent
 from common.types import ActionType
-from config import GameConfig
-from game_entities.base import BaseEntity
+from entities.base_entity import BaseEntity
 
 if TYPE_CHECKING:
     from worlds.world import World
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = util.get_logger(__name__)
 
 
 class MovableEntity(BaseEntity):
-    """
-    For movable entities such as players, enemies, etc.
-    Basic movements: move left, move right, jump.
-    """
-
     def __init__(
         self,
+        animation_interval_ms: int = 80,
         speed: int = 0,
+        gravity: int = 0,
+        init_dx: int = 0,
+        init_dy: int = 0,
         jump_vertical_speed: int = 0,
+        jump_with_trampoline_speed: int = 0,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
 
+        # The gravity value unique to this subject.
+        self.gravity = gravity
+
         # How fast this subject moves.
         self.speed: int = speed
         self.jump_vertical_speed: int = jump_vertical_speed
+        self.jump_with_trampoline_speed: int = jump_with_trampoline_speed
 
         # Amount of delta (change) in position, along the 2 axis.
-        self.dx: int = 0
-        self.dy: int = 0
+        self.dx: int = init_dx
+        self.dy: int = init_dy
 
         # Tracking the states of this subject
         self.moving_left: bool = False
         self.moving_right: bool = False
-        self.is_landed: bool = False  # Let object fall to stable position
+        self.is_landed: bool = False  # Let subject fall to stable position
+        self.is_dying: bool = False
+
+        # minimal time until switching to next sprite
+        self.animation_interval_ms: int = animation_interval_ms
+        self.last_animation_ms: int = 0
 
     def update(self, events: Sequence[GameEvent], world: World) -> None:
         super().update(events, world)
@@ -53,7 +61,7 @@ class MovableEntity(BaseEntity):
 
         if self.is_landed:
             self.dy = 0
-        self.dy += GameConfig.GRAVITY
+        self.dy += self.gravity
 
         if self.moving_left:
             self.dx = -self.speed
@@ -67,35 +75,40 @@ class MovableEntity(BaseEntity):
         self.rect.x += self.dx
         self.rect.y += self.dy
 
-        # Depends on the subject current movement status, tweak the sprite rendering.
-        self._update_sprite_state()
-
-    def _update_sprite_state(self):
-        # Set the current movement state
-        if self.is_landed:
-            if self.dx == 0:
-                self.sprite.set_action(ActionType.IDLE)
-            else:
-                self.sprite.set_action(ActionType.MOVE)
-        else:
-            self.sprite.set_action(ActionType.JUMP)
-
-        # If subject is moving left, turn on flip_x
-        if self.dx > 0:
-            self.sprite.set_flip_x(False)
-        elif self.dx < 0:
-            self.sprite.set_flip_x(True)
+    def stop(self):
+        self.moving_left = False
+        self.moving_right = False
 
     def move_left(self, enabled=True):
         self.moving_left = enabled
+        if self.moving_left:
+            self.moving_right = False
 
     def move_right(self, enabled=True):
         self.moving_right = enabled
+        if self.moving_right:
+            self.moving_left = False
+
+    def move_opposite(self):
+        if self.moving_left:
+            self.move_right()
+        elif self.moving_right:
+            self.move_left()
+
+    def move_random(self):
+        if random.randint(0, 1):
+            self.move_left()
+        else:
+            self.move_right()
 
     def jump(self):
         if self.is_landed:
             self.is_landed = False
             self.dy = -self.jump_vertical_speed
+
+    def jump_with_trampoline(self):
+        if not self.is_landed:
+            self.dy = -self.jump_with_trampoline_speed
 
     def _update_dx_dy_based_on_obstacles(self, obstacles):
         """
@@ -131,3 +144,8 @@ class MovableEntity(BaseEntity):
                     self.is_landed = True
                     # the gap between player's feet and ground
                     self.dy = obstacle.rect.top - self.rect.bottom
+
+    def set_action(self, new_action: ActionType) -> None:
+        if self.action != new_action:
+            self.action = new_action
+            self.sprite_index = 0
