@@ -129,7 +129,7 @@ class Player(AnimatedEntity):
                 if entity.entity_type == EntityType.LEVEL_END_FLAG:
                     GameEvent(EventType.LEVEL_END).post()
 
-    # <-- COT MOC 4 -->
+    
     def _handle_throw(self):
         """
         Spawns a ball at Player position, around the shoulder-level.
