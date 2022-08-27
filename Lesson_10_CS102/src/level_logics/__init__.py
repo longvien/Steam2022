@@ -12,7 +12,7 @@ from level_logics import one, twelve
 
 _HANDLERS = {
     1: one.event_handler,
-    12: twelve.event_handler,
+    13: twelve.event_handler,
 }
 
 
