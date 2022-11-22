@@ -5,7 +5,7 @@ import pygame
 from pygame import Surface
 from pygame.color import Color
 
-SCREEN_WIDTH: int = 12811
+SCREEN_WIDTH: int = 1281
 SCREEN_HEIGHT: int = 768
 
 WHITE: Color = Color(255, 255, 255)
