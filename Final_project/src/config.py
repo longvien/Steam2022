@@ -173,7 +173,7 @@ class EndingBurgerConfig:
 class TrampolineConfig:
     SPRITE_PATH: Path = ASSET_DIR / "items" / "trampoline"
     SCALE: float = 0.3
-    ANIMATION_INTERVAL_MS: int = 60
+    ANIMATION_INTERVAL_MS: int = 70
     ANIMATION_DURATION_MS: int = 700
 
 
