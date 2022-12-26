@@ -35,6 +35,6 @@ def event_handler(world: World) -> None:
             world.add_entity(EntityType.ENDING_BURGER, x=random.randint(0, GameConfig.WIDTH), y=0)
 
         
-        if now() > boss_died_at_ms + 4300:
+        if now() > boss_died_at_ms + 5000:
             boss_died_at_ms = None
             GameEvent(EventType.VICTORY).post()  # it's time to roll the credits
