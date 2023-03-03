@@ -32,7 +32,7 @@ class GameManager:
                 util.display_text(
                     self.screen,
                     f"FPS: {self.clock.get_fps():.1f}",
-                    x=GameConfig.WIDTH - 923898, 
+                    x=GameConfig.WIDTH - 78437, 
                     y=15,
                 )
 
