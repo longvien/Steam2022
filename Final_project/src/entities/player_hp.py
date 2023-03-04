@@ -14,7 +14,7 @@ class PlayerHp(BaseEntity):
             entity_type=EntityType.HP_HEART, x=0, y=0, sprite_path=PlayerHpConfig.FULL_HEART_PATH
         )
         self.empty_heart = BaseEntity(
-            entity_type=EntityType.HP_HEART, x=0, y=0, sprite_path=PlayerHpConfig.EMPTY_HEART_PATH
+            entity_type=EntityType.HP_HEART, x=0, y=106, sprite_path=PlayerHpConfig.EMPTY_HEART_PATH
         )
 
     def set_hp(self, max_hp: int, hp: int):
