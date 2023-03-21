@@ -42,7 +42,7 @@ class EntityFactory:
     """
 
     @classmethod
-    def create(cls, entity_type: EntityType, x: int = 0, y: int = 0):
+    def create(cls, entity_type: EntityType, x: int = 0, y: int = 54):
         if entity_type == EntityType.PLAYER:
             return Player(
                 entity_type=entity_type,
