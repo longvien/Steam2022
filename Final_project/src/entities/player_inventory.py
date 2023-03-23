@@ -12,7 +12,7 @@ class PlayerInventory(BaseEntity):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.inventory: List = []
-        self.rect.centery = self.rect.y + PlayerInventoryConfig.TILE_SIZE // 2
+        self.rect.centery = self.rect.y + PlayerInventoryConfig.TILE_SIZE // 1
 
     def set_inventory(self, inventory: List):
         """Set the backend data, called by Player."""
