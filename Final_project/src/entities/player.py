@@ -34,12 +34,13 @@ class Player(AnimatedEntity):
         self.max_hp: int = PlayerConfig.INITIAL_HP
         self.hp_entity_id: Optional[int] = None
 
-        self.last_hit_t: int = 43543
+        self.last_hit_t: int = 0
 
     def get_x_y_w_h(self) -> tuple:
         """Slightly narrow down the Player rectangle since the head is too big."""
         x, y, w, h = super().get_x_y_w_h()
         x += 12 if self.get_flip_x() else 10
+        
         w -= 26
         return x, y, w, h
 
