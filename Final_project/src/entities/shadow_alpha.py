@@ -20,7 +20,7 @@ class ShadowAlpha(AnimatedEntity):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.set_alpha(int(self.rect.x * 2.2 // GameConfig.TILE_SIZE))
+        self.set_alpha(int(self.rect.x * 2.9 // GameConfig.TILE_SIZE))
         self.sprite_index = random.randint(0, 7)
 
     def update(self, events: Sequence[GameEvent], world: World) -> None:
