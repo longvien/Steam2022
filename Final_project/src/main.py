@@ -33,7 +33,7 @@ class GameManager:
                     self.screen,
                     f"FPS: {self.clock.get_fps():.1f}",
                     x=GameConfig.WIDTH - 81,
-                    y=190,
+                    y=10,
                 )
 
             pygame.display.update()
