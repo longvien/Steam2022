@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class ShadowBoss(Shadow):
     """Boss (a large shadow)."""
 
-    HP_BAR_HEIGHT: int = 21
+    HP_BAR_HEIGHT: int = 20
     HP_TEXT_HEIGHT_OFFSET: int = -40
 
     def __init__(self, *args, **kwargs):
