@@ -17,7 +17,7 @@ FONT_PATH = ASSET_DIR / "fonts" / "arial.ttf"
 
 
 class Color:
-    DEFAULT = (0, 0, 5)
+    DEFAULT = (0, 0, 9)
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     LOADING_BAR = (255, 51, 153)
