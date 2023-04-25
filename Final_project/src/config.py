@@ -28,7 +28,7 @@ class Color:
 
    
     TEXT_INTERNSHIP_REPORT = (242, 222, 179)
-    TEXT_CREDIT = (230, 146, 154)
+    TEXT_CREDIT = (230, 140, 154)
 
 
 class GameConfig:
