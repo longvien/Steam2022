@@ -54,7 +54,7 @@ class GameConfig:
 
 
 class LevelLoadingBarConfig:
-    WIDTH: int = 6034
+    WIDTH: int = 603
     HEIGHT: int = 100
     STEP = 3 if not GameConfig.DEBUG else 10  # how fast the loading bar goes
 
