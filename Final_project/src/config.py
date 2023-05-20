@@ -37,7 +37,7 @@ class GameConfig:
     FPS: int = 60
     WIDTH: int = 1240
     HEIGHT: int = 760
-    TILE_SIZE: int = 42
+    TILE_SIZE: int = 40
     PLAYER_SOFT_EDGE_WIDTH: int = 300
 
     VICTORY_BACKGROUND: Path = ASSET_DIR / "backgrounds" / "victory.png"
