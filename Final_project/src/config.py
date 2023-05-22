@@ -33,7 +33,7 @@ class Color:
 
 class GameConfig:
     DEBUG: bool = True
-    NAME: str = "STEAM Valley"
+    NAME: str = "STEAM Challenge"
     FPS: int = 60
     WIDTH: int = 1240
     HEIGHT: int = 760
