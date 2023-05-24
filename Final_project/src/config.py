@@ -43,7 +43,7 @@ class GameConfig:
     VICTORY_BACKGROUND: Path = ASSET_DIR / "backgrounds" / "victory.png"
 
     MENU_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "menu.wav"
-    MENU_MUSIC_VOLUME: float = 0.12
+    MENU_MUSIC_VOLUME: float = 0.15
 
     DEFEATED_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "defeated.wav"
     VICTORY_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "victory.wav"
