@@ -43,7 +43,7 @@ class GameConfig:
     VICTORY_BACKGROUND: Path = ASSET_DIR / "backgrounds" / "victory.png"
 
     MENU_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "menu.wav"
-    MENU_MUSIC_VOLUME: float = 0.1439056343
+    MENU_MUSIC_VOLUME: float = 0.15
 
     DEFEATED_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "defeated.wav"
     VICTORY_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "victory.wav"
@@ -54,21 +54,21 @@ class GameConfig:
 
 
 class LevelLoadingBarConfig:
-    WIDTH: int = 6034
+    WIDTH: int = 60
     HEIGHT: int = 100
     STEP = 3 if not GameConfig.DEBUG else 10  # how fast the loading bar goes
 
 
 class DialogueBoxConfig:
     SPRITE_PATH: Path = ASSET_DIR / "items" / "dialogue_box.png"
-    WIDTH: int = 800
-    HEIGHT: int = 200
+    WIDTH: int = 80
+    HEIGHT: int = 20
     SCALE: Tuple[int, int] = (WIDTH, HEIGHT)
     X: int = (GameConfig.WIDTH - WIDTH) // 2
     Y: int = GameConfig.HEIGHT - HEIGHT + 24
     PADDING_X: int = 108
     PADDING_Y: int = 30
-    LINE_HEIGHT: int = 24
+    LINE_HEIGHT: int = 2
 
 
 class PlayerConfig:
