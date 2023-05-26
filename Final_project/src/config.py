@@ -72,8 +72,8 @@ class DialogueBoxConfig:
 
 
 class PlayerConfig:
-    DEFAULT_X: int = 350
-    DEFAULT_Y: int = 400
+    DEFAULT_X: int = 35
+    DEFAULT_Y: int = 40
     SPRITE_PATH: Path = ASSET_DIR / "player"
     SCALE: float = 0.16
     GRAVITY: int = 2
@@ -83,12 +83,12 @@ class PlayerConfig:
     # minimal time until switching to the next sprite in sequence
     ANIMATION_INTERVAL_MS: int = 70 * 60 // GameConfig.FPS
     INITIAL_HP: int = 3
-    INVULNERABLE_DURATION_MS: int = 1000
+    INVULNERABLE_DURATION_MS: int = 10
 
     HURT_DURATION_MS: int = 80 * 4
 
     # TODO: we have 7 sprites for ActionType.THROW but only use 2-3 now
-    THROW_DURATION_MS: int = 170 * 60 // GameConfig.FPS
+    THROW_DURATION_MS: int = 70 * 60 // GameConfig.FPS
 
 
 class PlayerHpConfig:
@@ -100,7 +100,7 @@ class PlayerHpConfig:
 
 
 class PlayerInventoryConfig:
-    X: int = 290
+    X: int = 20
     Y: int = 30
     X_STEP: int = 60  # distance between 2 consecutive items
 
@@ -122,13 +122,13 @@ class PlayerBulletConfig:
     INIT_DY: int = -10
 
     # the time between creation and deletion of entities of this type
-    TTL_MS: int = 400 * 60 // GameConfig.FPS
+    TTL_MS: int = 40 * 60 // GameConfig.FPS
 
 
 class ShadowConfig:
     SPRITE_PATH: Path = ASSET_DIR / "npcs" / "shadow"
     SCALE: float = 0.2
-    ANIMATION_INTERVAL_MS: int = 200
+    ANIMATION_INTERVAL_MS: int = 20
     SPEED: int = 1
     DAMAGE: int = 1
 
@@ -136,15 +136,15 @@ class ShadowConfig:
 class ShadowBossConfig:
     SPRITE_PATH: Path = ASSET_DIR / "npcs" / "shadow"
     SCALE: float = 0.6
-    ANIMATION_INTERVAL_MS: int = 200
+    ANIMATION_INTERVAL_MS: int = 20
     SPEED: int = 1
     DAMAGE: int = 1
     INITIAL_HP: int = 100
 
-    ANGRY_INTERVAL_MS: int = 7000
-    ANGRY_DURATION_MS: int = 2000
+    ANGRY_INTERVAL_MS: int = 70
+    ANGRY_DURATION_MS: int = 20
 
-    HURT_DURATION_MS: int = 500
+    HURT_DURATION_MS: int = 50
 
 
 class ShadowBulletConfig:
@@ -158,7 +158,7 @@ class ShadowBulletConfig:
     INIT_DY: int = -15
 
     # the time between creation and deletion of entities of this type
-    TTL_MS: int = 3000
+    TTL_MS: int = 30
 
 
 class EndingBurgerConfig:
@@ -167,21 +167,21 @@ class EndingBurgerConfig:
     GRAVITY: float = 2.5
 
     # the time between creation and deletion of entities of this type
-    TTL_MS: int = 420
+    TTL_MS: int = 40
 
 
 class TrampolineConfig:
     SPRITE_PATH: Path = ASSET_DIR / "items" / "trampoline"
     SCALE: float = 0.3
     ANIMATION_INTERVAL_MS: int = 70
-    ANIMATION_DURATION_MS: int = 700
+    ANIMATION_DURATION_MS: int = 70
 
 
 @dataclass
 class NpcConfig:
     entity_type: EntityType
     scale: float = 0.6
-    animation_interval_ms: int = 2500
+    animation_interval_ms: int = 20
     default_alpha: int = 180  # 255 is fully opaque
 
     def __post_init__(self):
