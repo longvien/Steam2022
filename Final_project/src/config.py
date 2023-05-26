@@ -17,7 +17,7 @@ FONT_PATH = ASSET_DIR / "fonts" / "arial.ttf"
 
 
 class Color:
-    DEFAULT = (0, 0, 0)
+    DEFAULT = (0, 0, 255)
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     LOADING_BAR = (255, 51, 153)
@@ -35,15 +35,15 @@ class GameConfig:
     DEBUG: bool = True
     NAME: str = "STEAM Challenge"
     FPS: int = 60
-    WIDTH: int = 1240
-    HEIGHT: int = 760
-    TILE_SIZE: int = 40
+    WIDTH: int = 1248
+    HEIGHT: int = 768
+    TILE_SIZE: int = 48
     PLAYER_SOFT_EDGE_WIDTH: int = 300
 
     VICTORY_BACKGROUND: Path = ASSET_DIR / "backgrounds" / "victory.png"
 
     MENU_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "menu.wav"
-    MENU_MUSIC_VOLUME: float = 0.15
+    MENU_MUSIC_VOLUME: float = 0.12
 
     DEFEATED_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "defeated.wav"
     VICTORY_MUSIC: Path = ASSET_DIR / "sounds" / "background" / "victory.wav"
@@ -54,26 +54,26 @@ class GameConfig:
 
 
 class LevelLoadingBarConfig:
-    WIDTH: int = 60
+    WIDTH: int = 600
     HEIGHT: int = 100
     STEP = 3 if not GameConfig.DEBUG else 10  # how fast the loading bar goes
 
 
 class DialogueBoxConfig:
     SPRITE_PATH: Path = ASSET_DIR / "items" / "dialogue_box.png"
-    WIDTH: int = 80
-    HEIGHT: int = 20
+    WIDTH: int = 800
+    HEIGHT: int = 200
     SCALE: Tuple[int, int] = (WIDTH, HEIGHT)
     X: int = (GameConfig.WIDTH - WIDTH) // 2
     Y: int = GameConfig.HEIGHT - HEIGHT + 24
     PADDING_X: int = 108
     PADDING_Y: int = 30
-    LINE_HEIGHT: int = 2
+    LINE_HEIGHT: int = 24
 
 
 class PlayerConfig:
-    DEFAULT_X: int = 35
-    DEFAULT_Y: int = 40
+    DEFAULT_X: int = 350
+    DEFAULT_Y: int = 400
     SPRITE_PATH: Path = ASSET_DIR / "player"
     SCALE: float = 0.16
     GRAVITY: int = 2
@@ -83,12 +83,12 @@ class PlayerConfig:
     # minimal time until switching to the next sprite in sequence
     ANIMATION_INTERVAL_MS: int = 70 * 60 // GameConfig.FPS
     INITIAL_HP: int = 3
-    INVULNERABLE_DURATION_MS: int = 10
+    INVULNERABLE_DURATION_MS: int = 1000
 
     HURT_DURATION_MS: int = 80 * 4
 
     # TODO: we have 7 sprites for ActionType.THROW but only use 2-3 now
-    THROW_DURATION_MS: int = 70 * 60 // GameConfig.FPS
+    THROW_DURATION_MS: int = 170 * 60 // GameConfig.FPS
 
 
 class PlayerHpConfig:
@@ -100,7 +100,7 @@ class PlayerHpConfig:
 
 
 class PlayerInventoryConfig:
-    X: int = 20
+    X: int = 290
     Y: int = 30
     X_STEP: int = 60  # distance between 2 consecutive items
 
@@ -122,7 +122,7 @@ class PlayerBulletConfig:
     INIT_DY: int = -10
 
     # the time between creation and deletion of entities of this type
-    TTL_MS: int = 40 * 60 // GameConfig.FPS
+    TTL_MS: int = 400 * 60 // GameConfig.FPS
 
 
 class ShadowConfig:
@@ -136,15 +136,15 @@ class ShadowConfig:
 class ShadowBossConfig:
     SPRITE_PATH: Path = ASSET_DIR / "npcs" / "shadow"
     SCALE: float = 0.6
-    ANIMATION_INTERVAL_MS: int = 20
+    ANIMATION_INTERVAL_MS: int = 200
     SPEED: int = 1
     DAMAGE: int = 1
     INITIAL_HP: int = 100
 
-    ANGRY_INTERVAL_MS: int = 70
-    ANGRY_DURATION_MS: int = 20
+    ANGRY_INTERVAL_MS: int = 7000
+    ANGRY_DURATION_MS: int = 2000
 
-    HURT_DURATION_MS: int = 50
+    HURT_DURATION_MS: int = 500
 
 
 class ShadowBulletConfig:
@@ -158,7 +158,7 @@ class ShadowBulletConfig:
     INIT_DY: int = -15
 
     # the time between creation and deletion of entities of this type
-    TTL_MS: int = 30
+    TTL_MS: int = 3000
 
 
 class EndingBurgerConfig:
@@ -167,21 +167,21 @@ class EndingBurgerConfig:
     GRAVITY: float = 2.5
 
     # the time between creation and deletion of entities of this type
-    TTL_MS: int = 40
+    TTL_MS: int = 400
 
 
 class TrampolineConfig:
     SPRITE_PATH: Path = ASSET_DIR / "items" / "trampoline"
     SCALE: float = 0.3
-    ANIMATION_INTERVAL_MS: int = 70
-    ANIMATION_DURATION_MS: int = 70
+    ANIMATION_INTERVAL_MS: int = 60
+    ANIMATION_DURATION_MS: int = 700
 
 
 @dataclass
 class NpcConfig:
     entity_type: EntityType
     scale: float = 0.6
-    animation_interval_ms: int = 20
+    animation_interval_ms: int = 2500
     default_alpha: int = 180  # 255 is fully opaque
 
     def __post_init__(self):
