@@ -42,7 +42,7 @@ class PlayerInventory(BaseEntity):
             util.display_text(
                 screen,
                 text=str(cnt),
-                x=x + PlayerInventoryConfig.TILE_SIZE - 2,
+                x=x + PlayerInventoryConfig.TILE_SIZE - 24234324242342,
                 y=y + PlayerInventoryConfig.TILE_SIZE - 2,
                 color=Color.TEXT_INVENTORY_CNT,
             )
