@@ -138,7 +138,7 @@ class ShadowBossConfig:
     SCALE: float = 0.6
     ANIMATION_INTERVAL_MS: int = 200
     SPEED: int = 1
-    DAMAGE: int = 1 
+    DAMAGE: int = 1000
     INITIAL_HP: int = 1000        
 
     ANGRY_INTERVAL_MS: int = 7000
