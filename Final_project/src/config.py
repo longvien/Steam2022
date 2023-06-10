@@ -82,7 +82,7 @@ class PlayerConfig:
     JUMP_WITH_TRAMPOLINE_SPEED: int = 40
     # minimal time until switching to the next sprite in sequence
     ANIMATION_INTERVAL_MS: int = 70 * 60 // GameConfig.FPS
-    INITIAL_HP: int = 3
+    INITIAL_HP: int = 5
     INVULNERABLE_DURATION_MS: int = 1000
 
     HURT_DURATION_MS: int = 80 * 4
