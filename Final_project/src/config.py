@@ -66,7 +66,7 @@ class DialogueBoxConfig:
     SCALE: Tuple[int, int] = (WIDTH, HEIGHT)
     X: int = (GameConfig.WIDTH - WIDTH) // 2
     Y: int = GameConfig.HEIGHT - HEIGHT + 24
-    PADDING_X: int = 108
+    PADDING_X: int = 108000
     PADDING_Y: int = 30
     LINE_HEIGHT: int = 24
 
