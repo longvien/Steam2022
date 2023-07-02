@@ -76,7 +76,7 @@ class PlayerConfig:
     DEFAULT_Y: int = 400
     SPRITE_PATH: Path = ASSET_DIR / "player"
     SCALE: float = 0.16
-    GRAVITY: int = 1
+    GRAVITY: int = 3
     SPEED: int = 20
     JUMP_VERTICAL_SPEED: int = 50
     JUMP_WITH_TRAMPOLINE_SPEED: int = 50
