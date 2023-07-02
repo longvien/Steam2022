@@ -77,7 +77,7 @@ class PlayerConfig:
     SPRITE_PATH: Path = ASSET_DIR / "player"
     SCALE: float = 0.16
     GRAVITY: int = 3
-    SPEED: int = 20
+    SPEED: int = 50
     JUMP_VERTICAL_SPEED: int = 50
     JUMP_WITH_TRAMPOLINE_SPEED: int = 50
     # minimal time until switching to the next sprite in sequence
