@@ -114,9 +114,9 @@ class PlayerInventoryConfig:
 class PlayerBulletConfig:
     SPRITE_PATH: Path = ASSET_DIR / "items" / "player_bullet.png"
     SCALE: float = 0.7
-    SPEED: int = 35
-    GRAVITY: int = 2
-    DAMAGE: int = 10
+    SPEED: int = 40
+    GRAVITY: int = 1
+    DAMAGE: int = 100
 
     # initial vertical movement
     INIT_DY: int = -10
