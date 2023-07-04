@@ -115,7 +115,7 @@ class PlayerBulletConfig:
     SPRITE_PATH: Path = ASSET_DIR / "items" / "player_bullet.png"
     SCALE: float = 0.7
     SPEED: int = 50
-    GRAVITY: int = 4
+    GRAVITY: int = 3
     DAMAGE: int = 100
 
     # initial vertical movement
@@ -129,15 +129,15 @@ class ShadowConfig:
     SPRITE_PATH: Path = ASSET_DIR / "npcs" / "shadow"
     SCALE: float = 0.2
     ANIMATION_INTERVAL_MS: int = 20
-    SPEED: int = 1
-    DAMAGE: int = 1
+    SPEED: int = 50
+    DAMAGE: int = 3
 
 
 class ShadowBossConfig:
     SPRITE_PATH: Path = ASSET_DIR / "npcs" / "shadow"
     SCALE: float = 0.6
     ANIMATION_INTERVAL_MS: int = 200
-    SPEED: int = 1
+    SPEED: int = 60
     DAMAGE: int = 1
     INITIAL_HP: int = 1000      
 
