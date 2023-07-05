@@ -130,14 +130,14 @@ class ShadowConfig:
     SCALE: float = 0.2
     ANIMATION_INTERVAL_MS: int = 20
     SPEED: int = 50
-    DAMAGE: int = 3
+    DAMAGE: int = 1
 
 
 class ShadowBossConfig:
     SPRITE_PATH: Path = ASSET_DIR / "npcs" / "shadow"
     SCALE: float = 0.6
     ANIMATION_INTERVAL_MS: int = 200
-    SPEED: int = 60
+    SPEED: int = 50
     DAMAGE: int = 1
     INITIAL_HP: int = 1000      
 
