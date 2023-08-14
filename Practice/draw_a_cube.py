@@ -1,6 +1,6 @@
 import turtle
 tut = turtle.Screen()
-tut.bgcolor("green")
+tut.bgcolor("red")
 tut.title("Turtle")
 my_pen = turtle.Turtle()
 my_pen.color("orange")
