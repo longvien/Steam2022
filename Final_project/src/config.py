@@ -129,7 +129,7 @@ class ShadowConfig:
     SPRITE_PATH: Path = ASSET_DIR / "npcs" / "shadow"
     SCALE: float = 0.2
     ANIMATION_INTERVAL_MS: int = 20
-    SPEED: int = 500
+    SPEED: int = 5000
     DAMAGE: int = 1
 
 
